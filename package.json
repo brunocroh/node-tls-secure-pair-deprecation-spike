@@ -1,0 +1,30 @@
+{
+  "name": "tls-secure-pair-deprecation-spike",
+  "version": "1.0.0",
+  "description": "A working example of tls.SecurePair deprecated implementation",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brunocroh/tls-secure-pair-deprecation-spike.git"
+  },
+  "keywords": [
+    "nodejs",
+    "deprecations",
+    "userland-migrations",
+    "codemod",
+    "ast-grep",
+    "tls",
+    "tls.SecurePair",
+    "SecurePair",
+    "tls.TLSSocket"
+  ],
+  "author": "Bruno Rodrigues",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/brunocroh/tls-secure-pair-deprecation-spike/issues"
+  },
+  "homepage": "https://github.com/brunocroh/tls-secure-pair-deprecation-spike#readme"
+}
