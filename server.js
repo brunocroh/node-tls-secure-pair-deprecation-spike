@@ -4,38 +4,37 @@ const fs = require('fs')
 
 const options = {
   key: fs.readFileSync('./key.pem'),
-  cert: fs.readFileSync('./cert.pem'),
+  cert: fs.readFileSync('./cert.pem')
 }
 
 const server = net.createServer((socket) => {
   console.log('Client Connected')
-  const pair = tls.createSecurePair(
+
+  const securePair = tls.createSecurePair(
     tls.createSecureContext(options),
+    true,
+    true,
     false
   )
 
-  socket.pipe(pair.encrypted)
-  pair.encrypted.pipe(socket)
+  socket.pipe(securePair.encrypted)
+  securePair.encrypted.pipe(socket)
 
-  socket.resume()
-
-  socket.on('error', console.error)
-
-  pair.on('secure', () => {
-    console.log('Secure Connection Established')
-
-    pair.cleartext.on('data', (data) => {
-      console.log('Server received:', data)
-      pair.cleartext.write('Write TLS Server')
+  securePair.on('secure', () => {
+    console.log('TLS connection established')
+    
+    securePair.cleartext.on('data', (data) => {
+      console.log('Server received:', data.toString())
+      securePair.cleartext.write('data receveid through secure pair')
     })
   })
 
-  pair.encrypted.on('error', (err) => {
-    console.error('encrypted error:', err)
+  securePair.on('error', (err) => {
+    console.error('error:', err)
   })
 
-  pair.cleartext.on('error', (err) => {
-    console.error('cleartext error:', err)
+  socket.on('error', (err) => {
+    console.error('socket error:', err)
   })
 })
 

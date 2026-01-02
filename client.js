@@ -1,37 +1,27 @@
-const net = require('net')
 const tls = require('tls')
+const readline = require('readline')
+const fs = require('fs')
 
-const socket = net.connect(8443)
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+})
 
-const pair = tls.createSecurePair(
-  tls.createSecureContext({
-    rejectUnauthorized: false
-  }),
-  true,
-)
+const options = {
+  rejectUnauthorized: false
+}
 
-socket.pipe(pair.encrypted)
-pair.encrypted.pipe(socket)
-socket.resume()
+const socket = tls.connect(8443, options, () => {
 
-pair.encrypted.write(Buffer.alloc(0))
-
-
-pair.on('secure', () => {
-  console.log('Client Secure Connection Established')
-
-  pair.cleartext.on('data', (data) => {
-    console.log('Client received:', data.toString())
-    pair.cleartext.end()
+  socket.on('data', (data) => {
+    console.log("data", data.toString().trim())
   })
-  
-  pair.cleartext.write("Client Message")
-})
 
-pair.encrypted.on('error', (err) => {
-  console.error('encrypted error:', err)
-})
+  rl.question('message to send: ', (msg) => {
+    socket.write(msg)
 
-pair.cleartext.on('error', (err) => {
-  console.error('cleartext error:', err)
+    rl.close();
+
+  })
+
 })
